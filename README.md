@@ -91,21 +91,12 @@ Then complete the User class with the two followin method
 
 ``` console
 
-/**
-    * Get the identifier that will be stored in the subject claim of the JWT.
-    *
-    * @return mixed
-    */
 public function getJWTIdentifier()
 {
     return $this->getKey();
 }
 
-/**
-    * Return a key value array, containing any custom claims to be added to the JWT.
-    *
-    * @return array
-    */
+
 public function getJWTCustomClaims()
 {
     return [];
@@ -151,18 +142,23 @@ npm install bootstrap-icons --save-dev
 npm i --save-dev sass
 ```
 
-* Create new file **`app.scss`** in resources folder **`resources/sass/app.scss`**
+* Create new file **`app.scss`** in resources folder `resources/sass/app.scss`
 
 Add the following line in the file
 
-**`@import 'bootstrap/scss/bootstrap';`**
-
-Add the following line in the file to import icons
-
-**`@import 'bootstrap-icons/font/bootstrap-icons.css';`**
+``` console
+@import 'bootstrap/scss/bootstrap';
+```
 
 
-* Make sure that in the file **`app.js`** in folder **`resources/js/app.js`** there the line
+Add the following line in the same file to import icons
+
+``` console
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+```
+
+
+* Make sure that in the file `app.js` in folder `resources/js/app.js` there is the line
 
 **`import './bootstrap';`**
 
@@ -171,14 +167,19 @@ Then, add also the line in the app.js file
 **`import * as bootstrap from 'bootstrap';`**
 
 
-* In your main blade file **`layout.app.blade.php`** or any other main layout file, add the following Vite line to make sure that CSS and JS is loaded
+* In your main blade file `layout.app.blade.php` or any other main layout file, add the following Vite line to make sure that CSS and JS is loaded
 
-**`@vite(['resources/sass/app.scss', 'resources/js/app.js'])`**
+``` console
+@vite(['resources/sass/app.scss', 'resources/js/app.js'])
+```
+
 
 * At the project root folder, make sure that the file **`vite.config.js`** contains the line
 
-**`input : ['resources/sass/app.scss', 'resources/js/app.js']`**
+
+`input : ['resources/sass/app.scss', 'resources/js/app.js']`
 So you must have the following content
+
 
 ``` console
 import { defineConfig } from 'vite';
