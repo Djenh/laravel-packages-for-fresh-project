@@ -41,12 +41,25 @@ composer require spatie/laravel-permission
 php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
 ```
 
+In  **`App\Models\User.php`** file, add this
+
+``` console
+use Spatie\Permission\Traits\HasRoles;
+```
+
+Add this in User model class 
+
+``` console
+use HasFactory, Notifiable, HasRoles;
+```
+
 
 Now, install related Node packages
 ``` php
 php artisan optimize:clear
 php artisan migrate
 ```
+
 
 ### **3- JWT Auth**
 
@@ -65,6 +78,41 @@ Now, generate secret key for JWT
 ``` php
 php artisan jwt:secret
 ```
+
+In  **`App\Models\User.php`** file, add this
+
+``` console
+use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
+```
+
+and add implementation of JWTSubject to User class **`implements JWTSubject`**
+
+Then complete the User class with the two followin method
+
+``` console
+
+/**
+    * Get the identifier that will be stored in the subject claim of the JWT.
+    *
+    * @return mixed
+    */
+public function getJWTIdentifier()
+{
+    return $this->getKey();
+}
+
+/**
+    * Return a key value array, containing any custom claims to be added to the JWT.
+    *
+    * @return array
+    */
+public function getJWTCustomClaims()
+{
+    return [];
+}
+```
+
+
 
 
 ### **4- Swagger**
@@ -164,3 +212,4 @@ php artisan migrate
 
 composer run dev
 ```
+
