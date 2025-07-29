@@ -47,14 +47,26 @@ In  **`App\Models\User.php`** file, add this
 use Spatie\Permission\Traits\HasRoles;
 ```
 
+
 Add this in User model class 
 
 ``` console
 use HasFactory, Notifiable, HasRoles;
 ```
 
+In  **`bootstrap\app.php`** file, add/complete this
 
-Now, install related Node packages
+``` console
+->withMiddleware(function (Middleware $middleware): void {
+    $middleware->alias([
+        'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
+        'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+        'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
+    ]);
+})
+```
+
+Now, clear cache and migrate tables
 ``` php
 php artisan optimize:clear
 php artisan migrate
