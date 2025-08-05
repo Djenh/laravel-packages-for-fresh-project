@@ -131,10 +131,6 @@ composer require darkaonline/l5-swagger
 php artisan vendor:publish --provider "L5Swagger\L5SwaggerServiceProvider"
 ```
 
-To generate docs, execute
-``` php
-php artisan l5-swagger:generate
-```
 
 Open the base Controller file at `App\Http\Controllers\Controller.php` and add the following lines
 
@@ -152,6 +148,11 @@ Open the base Controller file at `App\Http\Controllers\Controller.php` and add t
  *     name="Authorization"
  * )
  */
+```
+
+To generate docs, execute
+``` php
+php artisan l5-swagger:generate
 ```
 
 You can access your documentation at `/api/documentation` endpoint.
