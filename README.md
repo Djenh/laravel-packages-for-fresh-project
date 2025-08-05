@@ -127,6 +127,36 @@ Execute the command
 composer require darkaonline/l5-swagger
 ```
 
+``` php
+php artisan vendor:publish --provider "L5Swagger\L5SwaggerServiceProvider"
+```
+
+To generate docs, execute
+``` php
+php artisan l5-swagger:generate
+```
+
+Open the base Controller file at `App\Http\Controllers\Controller.php` and add the following lines
+
+``` console
+/**
+ * @OA\Info(
+ *    title="MyApp API",
+ *    description="API endpoints for MyApp",
+ *    version="1.0.0",
+ * ),
+ * @OA\SecurityScheme(
+ *     type="apiKey",
+ *     in="header",
+ *     securityScheme="token",
+ *     name="Authorization"
+ * )
+ */
+```
+
+You can access your documentation at `/api/documentation` endpoint.
+
+
 
 ### **5- Bootstrap 5 with Vite**
 
