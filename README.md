@@ -115,6 +115,22 @@ public function getJWTCustomClaims()
 }
 ```
 
+In  the file `app\config\auth.php`, add this in authentication guards key.
+
+``` console
+
+'api' => [
+    'driver' => 'jwt',
+    'provider' => 'users',
+],
+```
+
+To get the logged in user, use the following syntax
+``` php
+$user = Auth::guard('api')->user();
+```
+
+
 
 
 
