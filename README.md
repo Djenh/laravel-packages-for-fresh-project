@@ -75,7 +75,7 @@ In  **`config\auth.php`** file, add/complete this
         'provider' => 'users',
     ],
     'api' => [
-        'driver' => 'jwt',
+        'driver' => 'sanctum', // Or 'jwt' if using JWT, or 'passport' if using Passport
         'provider' => 'users',
     ],
 ],
