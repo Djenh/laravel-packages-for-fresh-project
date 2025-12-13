@@ -66,9 +66,36 @@ In  **`bootstrap\app.php`** file, add/complete this
 })
 ```
 
+In  **`config\auth.php`** file, add/complete this
+
+``` console
+'guards' => [
+    'web' => [
+        'driver' => 'session',
+        'provider' => 'users',
+    ],
+    'api' => [
+        'driver' => 'jwt',
+        'provider' => 'users',
+    ],
+],
+```
+
 Now, clear cache and migrate tables
+
+``` php
+php artisan permission:cache-reset
+```
+
+``` php
+php artisan cache:clear
+```
+
 ``` php
 php artisan optimize:clear
+```
+
+``` php
 php artisan migrate
 ```
 
