@@ -102,7 +102,7 @@ php artisan migrate
 
 ### **3- JWT Auth**
 
-Link : [php-open-source-saver/jwt-auth](php-open-source-saver/jwt-auth)
+Link : [https://github.com/PHP-Open-Source-Saver/jwt-auth](https://github.com/PHP-Open-Source-Saver/jwt-auth)
 
 Execute the command
 ``` php
