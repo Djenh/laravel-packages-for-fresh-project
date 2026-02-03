@@ -70,14 +70,14 @@ In  **`config\auth.php`** file, add/complete this
 
 ``` console
 'guards' => [
+    'api' => [
+        'driver' => 'jwt', // Or 'jwt' if using JWT, or 'passport' if using Passport, or 'sanctum' if using Laravel Sanctum
+        'provider' => 'users',
+    ],
     'web' => [
         'driver' => 'session',
         'provider' => 'users',
-    ],
-    'api' => [
-        'driver' => 'sanctum', // Or 'jwt' if using JWT, or 'passport' if using Passport
-        'provider' => 'users',
-    ],
+    ],    
 ],
 ```
 
@@ -178,20 +178,66 @@ php artisan vendor:publish --provider "L5Swagger\L5SwaggerServiceProvider"
 Open the base Controller file at `App\Http\Controllers\Controller.php` and add the following lines
 
 ``` console
-/**
- * @OA\Info(
- *    title="MyApp API",
- *    description="API endpoints for MyApp",
- *    version="1.0.0",
- * ),
- * @OA\SecurityScheme(
- *     type="apiKey",
- *     in="header",
- *     securityScheme="token",
- *     name="Authorization"
- * )
- */
+use OpenApi\Attributes as OA;
+
+#[OA\Info(
+    version: "1.0.0",
+    title: "MyApp API Documentation"
+)]
+#[OA\SecurityScheme(
+    securityScheme: 'bearerAuth',
+    type: 'http',
+    scheme: 'bearer',
+    bearerFormat: 'JWT'
+)]
 ```
+
+And then in any Controller, like `UserController.php` 
+
+``` console
+use OpenApi\Attributes as OA;
+
+class UserController extends Controller {
+#[OA\Get(
+    path: '/api/users',
+    tags: ['User'],
+    summary: 'Liste des utilisateurs',
+    security: [['bearerAuth' => []]],
+    parameters: [
+    new OA\Parameter(
+        name: 'page',
+        in: 'query',
+        required: false,
+        schema: new OA\Schema(type: 'integer', example: 1)
+    )
+    ],
+    responses: [
+    new OA\Response(
+        response: 200,
+        description: 'Liste des utilisateurs',
+        content: new OA\JsonContent(
+            properties: [
+                new OA\Property(property: 'data', type: 'array', items: new OA\Items(
+                    properties: [
+                        new OA\Property(property: 'id', type: 'integer'),
+                        new OA\Property(property: 'name', type: 'string'),
+                        new OA\Property(property: 'email', type: 'string'),
+                        new OA\Property(property: 'uuid', type: 'string'),
+                    ]
+                ))
+            ]
+        )
+    ),
+    new OA\Response(response: 401, description: 'Non authentifié')
+    ]
+)]
+public function index()
+{
+// Code
+}
+}
+```
+
 
 To generate docs, execute
 ``` php
@@ -199,6 +245,9 @@ php artisan l5-swagger:generate
 ```
 
 You can access your documentation at `/api/documentation` endpoint.
+
+For more information about the Swagger, check the documentation from [https://github.com/zircote/swagger-php](https://github.com/zircote/swagger-php)
+
 
 
 
