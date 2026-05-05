@@ -124,7 +124,12 @@ In  **`App\Models\User.php`** file, add this
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 ```
 
-and add implementation of JWTSubject to User class **`implements JWTSubject`**
+and add implementation of JWTSubject to User class 
+
+```console
+class User extends Authenticatable implements JWTSubject
+```
+
 
 Then complete the User class with the two followin method
 
@@ -157,6 +162,11 @@ To get the logged in user, use the following syntax
 $user = Auth::guard('api')->user();
 ```
 
+To test, add a route in **route/api.php** file. If this file doesn't exist create it by running the command
+
+``` php
+php artisan install:api
+```
 
 
 
@@ -177,12 +187,18 @@ php artisan vendor:publish --provider "L5Swagger\L5SwaggerServiceProvider"
 
 Open the base Controller file at `App\Http\Controllers\Controller.php` and add the following lines
 
-``` console
+``` php
+namespace App\Http\Controllers;
+
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Routing\Controller as BaseController;
+
 use OpenApi\Attributes as OA;
 
 #[OA\Info(
     version: "1.0.0",
-    title: "MyApp API Documentation"
+    title: "My App"
 )]
 #[OA\SecurityScheme(
     securityScheme: 'bearerAuth',
@@ -190,6 +206,11 @@ use OpenApi\Attributes as OA;
     scheme: 'bearer',
     bearerFormat: 'JWT'
 )]
+
+abstract class Controller extends BaseController
+{
+    use AuthorizesRequests, ValidatesRequests;
+}
 ```
 
 And then in any Controller, like `UserController.php` 
