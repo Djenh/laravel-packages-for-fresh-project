@@ -215,14 +215,14 @@ abstract class Controller extends BaseController
 
 And then in any Controller, like `UserController.php` 
 
-``` console
+``` php
 use OpenApi\Attributes as OA;
 
 class UserController extends Controller {
 #[OA\Get(
     path: '/api/users',
     tags: ['User'],
-    summary: 'Liste des utilisateurs',
+    summary: 'User list',
     security: [['bearerAuth' => []]],
     parameters: [
     new OA\Parameter(
@@ -235,7 +235,7 @@ class UserController extends Controller {
     responses: [
     new OA\Response(
         response: 200,
-        description: 'Liste des utilisateurs',
+        description: 'User list',
         content: new OA\JsonContent(
             properties: [
                 new OA\Property(property: 'data', type: 'array', items: new OA\Items(
@@ -243,13 +243,14 @@ class UserController extends Controller {
                         new OA\Property(property: 'id', type: 'integer'),
                         new OA\Property(property: 'name', type: 'string'),
                         new OA\Property(property: 'email', type: 'string'),
+                        new OA\Property(property: 'phone', type: 'string'),
                         new OA\Property(property: 'uuid', type: 'string'),
                     ]
                 ))
             ]
         )
     ),
-    new OA\Response(response: 401, description: 'Non authentifié')
+    new OA\Response(response: 401, description: 'Unauthenticated')
     ]
 )]
 public function index()
@@ -266,6 +267,80 @@ php artisan l5-swagger:generate
 ```
 
 You can access your documentation at `/api/documentation` endpoint.
+
+
+To avoid duplicating models data every time in differents controllers, you can create **OpenApi Schema** and called it globally.
+
+For example, create file `app/OpenApi/Schemas/UserSchema.php` and put the following content
+
+```php
+
+<?php
+
+namespace App\OpenApi\Schemas;
+
+use OpenApi\Attributes as OA;
+
+#[OA\Schema(
+    schema: 'User',
+    type: 'object',
+    description: 'User data',
+    properties: [
+        new OA\Property(property: 'id', type: 'integer', example: 1),
+        new OA\Property(property: 'name', type: 'string', example: 'John Doe'),
+        new OA\Property(property: 'email', type: 'string', example: 'john.doe@example.com'),
+        new OA\Property(property: 'phone', type: 'string', nullable: true),
+        new OA\Property(property: 'uuid', type: 'string', example: 'eecdbbe1-81e5-4b66-a5a4-b30e4d080e7a'),
+        new OA\Property(property: 'created_at', type: 'datetime'),
+        new OA\Property(property: 'updated_at', type: 'datetime'),
+    ]
+)]
+
+class UserSchema {}
+```
+
+Then you can easily call this schema as follow
+
+
+```php
+class UserController extends Controller {
+
+#[OA\Get(
+        path: '/api/users',
+        tags: ['User'],
+        summary: 'User list',
+        security: [['bearerAuth' => []]],
+        parameters: [
+            new OA\Parameter(
+                name: 'page',
+                in: 'query',
+                required: false,
+                schema: new OA\Schema(type: 'integer', example: 1)
+            ),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'User list',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'data', type: 'array', items: new OA\Items(
+                            ref: '#/components/schemas/User'
+                        ))
+                    ]
+                )
+            ),
+            new OA\Response(response: 401, description: 'Unauthenticated')
+        ]
+    )]
+
+    public function index(Request $request)
+    {
+        ....//Code
+    }
+}
+```
+
 
 For more information about the Swagger, check the documentation from [https://github.com/zircote/swagger-php](https://github.com/zircote/swagger-php)
 
